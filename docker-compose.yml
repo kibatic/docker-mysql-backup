@@ -1,6 +1,6 @@
 mysql-backup:
   container_name: mysql-backup
-  # image: tutum/mysql-backup
+  # image: kitpages/mysql-backup
   build: .
 
 docker-gen:
