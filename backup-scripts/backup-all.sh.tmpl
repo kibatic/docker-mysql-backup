@@ -1,0 +1,7 @@
+{{ range $key, $value := . }}
+  {{ if eq $value.Image.Repository "mysql" }}
+    {{ if eq $value.Image.Registry "" }}
+/backup.sh {{ $value.Name }} {{ $value.IP }} {{ $value.Env.MYSQL_ROOT_PASSWORD }}
+    {{ end }}
+  {{ end }}
+{{ end }}
