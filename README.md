@@ -11,4 +11,7 @@ Simple way to test it :
 docker-compose up -d
 ```
 
-TODO : add env vars doc, and more...
+TODO :
+- add env vars doc
+- restore script
+- cron stdout

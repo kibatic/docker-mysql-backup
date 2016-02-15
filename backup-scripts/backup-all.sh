@@ -1,1 +1,1 @@
-echo "No mysql container found"
+echo "No mysql containers found"
