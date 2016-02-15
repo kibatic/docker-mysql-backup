@@ -1,7 +1,7 @@
 {{ range $key, $value := . }}
   {{ if eq $value.Image.Repository "mysql" }}
     {{ if eq $value.Image.Registry "" }}
-/backup.sh {{ $value.Name }} {{ $value.IP }} {{ $value.Env.MYSQL_ROOT_PASSWORD }}
+. /currentenv && /backup-scripts/backup.sh {{ $value.Name }} {{ $value.IP }} {{ $value.Env.MYSQL_ROOT_PASSWORD }} {{ if $value.Env.MAX_BACKUPS }}${MAX_BACKUPS}{{ else }}30{{ end }}
     {{ end }}
   {{ end }}
 {{ end }}

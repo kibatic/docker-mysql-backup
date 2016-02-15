@@ -10,7 +10,6 @@ RUN mkdir /backup
 VOLUME ["/backup"]
 
 ADD backup-scripts/ /backup-scripts
-RUN chmod +x /backup-scripts/*.sh
 VOLUME ["/backup-scripts"]
 
 ENV CRON_TIME="0 0 * * *"
