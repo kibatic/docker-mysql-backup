@@ -1,16 +1,9 @@
 mysql-backup:
   container_name: mysql-backup
-  # image: kitpages/mysql-backup
   build: .
-  environment:
-    CRON_TIME: "* * * * *"
-    MAX_BACKUPS: 3
-
-docker-gen:
-  container_name: mysql-backup-dg
-  image: jwilder/docker-gen
-  entrypoint: docker-gen -watch /backup-scripts/backup-all.sh.tmpl /backup-scripts/backup-all.sh
-  volumes_from:
-    - mysql-backup
   volumes:
     - /var/run/docker.sock:/tmp/docker.sock:ro
+  environment:
+    CRON_TIME: "* * * * *"
+    BACKUP_MAX: 3
+    BACKUP_DB: --all-databases
