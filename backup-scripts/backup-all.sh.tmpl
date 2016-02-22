@@ -3,7 +3,14 @@
 {{ range $key, $value := . }}
   {{ if eq $value.Image.Repository "mysql" }}
     {{ if eq $value.Image.Registry "" }}
-/backup-scripts/backup.sh {{ $value.Name }} {{ $value.IP }} {{ $value.Env.MYSQL_ROOT_PASSWORD }} {{ if $value.Env.BACKUP_DB }}{{$value.Env.BACKUP_DB}}{{ else }}${BACKUP_DB}{{ end }} {{ if $value.Env.BACKUP_MAX }}{{$value.Env.BACKUP_MAX}}{{ else }}${BACKUP_MAX}{{ end }}
+
+/backup-scripts/backup.sh \
+  -n "{{ $value.Name }}" \
+  -h "{{ $value.IP }}" \
+  -p "{{ $value.Env.MYSQL_ROOT_PASSWORD }}" \
+  -d "{{ if $value.Env.BACKUP_DB }}{{$value.Env.BACKUP_DB}}{{ else }}${BACKUP_DB}{{ end }}" \
+  -m "{{ if $value.Env.BACKUP_MAX }}{{$value.Env.BACKUP_MAX}}{{ else }}${BACKUP_MAX}{{ end }}"
+
     {{ end }}
   {{ end }}
 {{ end }}

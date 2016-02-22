@@ -1,15 +1,21 @@
 #!/bin/bash
 
-CONTAINER_NAME=$1
-MYSQL_HOST=$2
-MYSQL_PASSWORD=$3
-BACKUP_DB=$4
-BACKUP_MAX=$5
-BACKUP_NAME="$1_$(date +\%Y-\%m-\%d_\%H-\%M-\%S).sql"
+while getopts ":n:h:p:d:m:" opt; do
+  case $opt in
+    n) CONTAINER_NAME=$OPTARG;;
+    h) MYSQL_HOST=$OPTARG;;
+    p) MYSQL_PASSWORD=$OPTARG;;
+    d) BACKUP_DB=$OPTARG;;
+    m) BACKUP_MAX=$OPTARG;;
+    \?) echo "Invalid option: -$OPTARG" >&2;exit 1;;
+  esac
+done
+
+BACKUP_NAME="${CONTAINER_NAME}_$(date +\%Y-\%m-\%d_\%H-\%M-\%S).sql"
 BACKUP_PATH="/backup/${CONTAINER_NAME}"
 LOG_PREFIX="Backup => ${CONTAINER_NAME} :"
 
-echo "$LOG_PREFIX start backuping <${BACKUP_DB}> (${BACKUP_MAX:-"no"} maximum backups)"
+echo "$LOG_PREFIX start backuping <${BACKUP_DB:-all databases}> (${BACKUP_MAX:-"no"} maximum backups)"
 echo "$LOG_PREFIX <${BACKUP_NAME}>"
 
 mkdir -p ${BACKUP_PATH}

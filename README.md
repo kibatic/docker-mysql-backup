@@ -1,6 +1,8 @@
 mysql-backup
 ===
 
+[![](https://badge.imagelayers.io/kitpages/mysql-backup:latest.svg)](https://imagelayers.io/?images=kitpages/mysql-backup:latest 'Get your own badge on imagelayers.io')
+
 /!\ This image is still in an experimental state /!\
 
 TODO :
@@ -13,7 +15,7 @@ If you run this image on a Docker host, every container you're running using the
 Simple way to test it :
 
 ```
-docker-compose up -d
+docker run --rm -v /path/to/your/storage:/backup -v /var/run/docker.sock:/tmp/docker.sock:ro kitpages/mysql-backup
 ```
 
 Configure mysql-backup
