@@ -11,7 +11,7 @@ while getopts ":n:h:p:d:m:" opt; do
   esac
 done
 
-BACKUP_NAME="${CONTAINER_NAME}_$(date +\%Y-\%m-\%d_\%H-\%M-\%S).sql"
+BACKUP_NAME="${CONTAINER_NAME}_$(date +\%Y-\%m-\%d_\%H-\%M-\%S).sql.gz"
 BACKUP_PATH="/backup/${CONTAINER_NAME}"
 LOG_PREFIX="Backup => ${CONTAINER_NAME} :"
 
@@ -20,7 +20,7 @@ echo "$LOG_PREFIX <${BACKUP_NAME}>"
 
 mkdir -p ${BACKUP_PATH}
 
-if mysqldump -h ${MYSQL_HOST} -u root -p${MYSQL_PASSWORD} ${BACKUP_DB:---all-databases} --events > ${BACKUP_PATH}/${BACKUP_NAME} ;then
+if mysqldump -h ${MYSQL_HOST} -u root -p${MYSQL_PASSWORD} ${BACKUP_DB:---all-databases} --events | gzip > ${BACKUP_PATH}/${BACKUP_NAME} ;then
     echo "Backup => ${CONTAINER_NAME} : success"
 else
     echo "Backup => ${CONTAINER_NAME} : failed"
