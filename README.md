@@ -40,4 +40,4 @@ You can add the following environment variables to a container to configure the 
 ```
 
 
-Thanks to Tumtum for their "tutumcloud/mysql-backup" image which this one is based on.
+Thanks to Tutum for their "tutumcloud/mysql-backup" image which this one is based on.
