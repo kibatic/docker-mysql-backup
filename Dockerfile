@@ -1,5 +1,5 @@
 FROM debian:jessie
-MAINTAINER Kitpages <ops@kitpages.fr>
+MAINTAINER Kitpages <system [at] kibatic.com>
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
