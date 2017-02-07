@@ -1,8 +1,6 @@
 mysql-backup
 ===
 
-[![](https://badge.imagelayers.io/kitpages/mysql-backup:latest.svg)](https://imagelayers.io/?images=kitpages/mysql-backup:latest 'Get your own badge on imagelayers.io')
-
 /!\ This image is still in an experimental state /!\
 
 TODO :
@@ -10,7 +8,7 @@ TODO :
 - a restore script
 - a way to exclude a container
 
-If you run this image on a Docker host, every container you're running using the "mysql" image will be backuped in "/backup/{container_name}/".
+If you run this image on a Docker host, every container with the label "mysql-backup" will be backuped in "/backup/{container_name}/".
 
 Simple way to test it :
 
