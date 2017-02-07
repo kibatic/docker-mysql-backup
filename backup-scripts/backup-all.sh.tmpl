@@ -1,8 +1,7 @@
 #!/bin/bash
 
 {{ range $key, $value := . }}
-  {{ if eq $value.Image.Repository "mysql" }}
-    {{ if eq $value.Image.Registry "" }}
+  {{ if contains $value.Labels "mysql-backup" }}
 
 /backup-scripts/backup.sh \
   -n "{{ $value.Name }}" \
@@ -11,6 +10,5 @@
   -d "{{ if $value.Env.BACKUP_DB }}{{$value.Env.BACKUP_DB}}{{ else }}${BACKUP_DB}{{ end }}" \
   -m "{{ if $value.Env.BACKUP_MAX }}{{$value.Env.BACKUP_MAX}}{{ else }}${BACKUP_MAX}{{ end }}"
 
-    {{ end }}
   {{ end }}
 {{ end }}

@@ -27,6 +27,10 @@ else
     rm -rf ${BACKUP_PATH}/${BACKUP_NAME}
 fi
 
+echo "----------"
+ls ${BACKUP_PATH} -N1 | wc -l
+echo "----------"
+
 if [ -n "${BACKUP_MAX}" ]; then
     while [ $(ls ${BACKUP_PATH} -N1 | wc -l) -gt ${BACKUP_MAX} ];
     do
