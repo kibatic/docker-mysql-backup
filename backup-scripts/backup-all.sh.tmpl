@@ -1,14 +1,54 @@
 #!/bin/bash
 
-{{ range $key, $value := . }}
-  {{ if contains $value.Labels "mysql-backup" }}
+{{ $CurrentContainer := where $ "ID" .Docker.CurrentContainerID | first }}
+
+{{ define "backup_script" }}
+
+# container.Name: "{{ .Container.Name }}"
+# "{{ .Comment }}"
+
+	{{ if and .Container .Port .IP }}
 
 /backup-scripts/backup.sh \
-  -n "{{ $value.Name }}" \
-  -h "{{ $value.IP }}" \
-  -p "{{ $value.Env.MYSQL_ROOT_PASSWORD }}" \
-  -d "{{ if $value.Env.BACKUP_DB }}{{$value.Env.BACKUP_DB}}{{ else }}${BACKUP_DB}{{ end }}" \
-  -m "{{ if $value.Env.BACKUP_MAX }}{{$value.Env.BACKUP_MAX}}{{ else }}${BACKUP_MAX}{{ end }}"
+  -n "{{ .Container.Name }}" \
+  -h "{{ .IP }}" \
+  -P "{{ .Port }}" \
+  -p "{{ .Container.Env.MYSQL_ROOT_PASSWORD }}" \
+  -d "{{ if .Container.Env.BACKUP_DB }}{{.Container.Env.BACKUP_DB}}{{ else }}${BACKUP_DB}{{ end }}" \
+  -m "{{ if .Container.Env.BACKUP_MAX }}{{.Container.Env.BACKUP_MAX}}{{ else }}${BACKUP_MAX}{{ end }}" \
+  -o "{{ if .Container.Env.BACKUP_OPTS }}{{.Container.Env.BACKUP_OPTS}}{{ else }}${BACKUP_OPTS}{{ end }}"
 
-  {{ end }}
+	{{ end }}
 {{ end }}
+
+{{ range $host, $containers := groupByMulti $ "Labels.mysql-backup" "," }}
+{{ range $container := $containers }}
+	{{ $addrLen := len $container.Addresses }}
+	{{ range $knownNetwork := $CurrentContainer.Networks }}
+		{{ range $containerNetwork := $container.Networks }}
+			{{ if eq $knownNetwork.Name $containerNetwork.Name }}
+				{{ if eq $addrLen 1 }}
+					{{ $address := index $container.Addresses 0 }}
+					{{ if $address }}
+						{{ if and $container.Node.ID $address.HostPort }}
+							{{ $IP := $container.Node.Address.IP }}
+							{{ $Port := $address.HostPort}}
+                            {{ template "backup_script" (dict "Container" $container "IP" $IP "Port" $Port "Comment" "Using host IP:PORT (e.g swarm)") }}
+						{{ else if $containerNetwork }}
+							{{ $IP := $containerNetwork.IP }}
+							{{ $Port := $address.Port}}
+                            {{ template "backup_script" (dict "Container" $container "IP" $IP "Port" $Port "Comment" "Using containers Network IP:PORT (e.g compose)") }}
+						{{ end }}
+					{{ else if $containerNetwork }}
+						{{ $IP := $containerNetwork.IP }}
+						{{ $Port := 3306 }}
+                        {{ template "backup_script" (dict "Container" $container "IP" $IP "Port" $Port "Comment" "Using fallback to Network IP:3306") }}
+					{{ end }}
+				{{ else }}
+                        {{ template "backup_script" (dict "Container" $container "IP" "" "Port" "" "Comment" "TODO - More than one Network-Adresses detected") }}
+				{{ end }}{{/* if only one network-adress */}}
+			{{ end }}{{/* if same network */}}
+		{{ end }}{{/* range container networks */}}
+	{{ end }}{{/* range currentContainer networks */}}
+{{ end }}{{/* range containers */}}
+{{ end }}{{/* range labels */}}
