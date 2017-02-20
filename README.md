@@ -6,7 +6,6 @@ mysql-backup
 TODO :
 - redirect backup log to stdout
 - a restore script
-- a way to exclude a container
 
 If you run this image on a Docker host, every container with the label "mysql-backup" will be backuped in "/backup/{container_name}/".
 
