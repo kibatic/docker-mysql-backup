@@ -7,3 +7,4 @@ mysql-backup:
     CRON_TIME: "* * * * *"
     BACKUP_MAX: 3
     BACKUP_DB: --all-databases
+    BACKUP_OPTS:
